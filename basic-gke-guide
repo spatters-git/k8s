@@ -1,0 +1,34 @@
+# set env variables
+export my_zone=us-central1-a
+export my_cluster=standard-cluster-1
+
+# get credentials
+gcloud container clusters get-credentials $my_cluster --zone $my_zone
+
+#enable kubectl bash tab completion
+source <(kubectl completion bash)
+
+# Live config changes (Declarative below)
+# Deploy basic nginx pod
+kubectl create deployment --image nginx nginx-1
+
+# push a file into a container
+kubectl cp ~/test.html $my_nginx_pod:/usr/share/nginx/html/test.html
+
+Expose pod
+kubectl expose pod $my_nginx_pod --port 80 --type LoadBalancer
+
+# Shell into container
+kubectl exec -it new-nginx /bin/bash
+
+# Declarative config
+# clone repo
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+
+ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+cd ~/ak8s/GKE_Shell/
+
+#Apply manifest
+kubectl apply -f ./new-nginx-pod.yaml
+
+
